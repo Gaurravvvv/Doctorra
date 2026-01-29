@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctorra</title>
+    <style>
+        :root {
+            --primary-color: #1565C0;
+            --accent-color: #E3F2FD;
+            --urgent-color: #d32f2f;
+            --ready-color: #388e3c;
+            --filling-color: #757575;
+            --bg-color: #ffffff;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
+        }
+
+        h2 {
+            color: var(--primary-color);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="password"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button.btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        button.btn-primary:hover {
+            background-color: #0d47a1;
+        }
+
+        .flash-messages {
+            color: white;
+            background: #d32f2f;
+            padding: 10px;
+            text-align: center;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        
+        /* Dashboard specific */
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .column {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .column h3 {
+            text-align: center;
+            border-bottom: 2px solid #ccc;
+            padding-bottom: 10px;
+        }
+
+        .kanban-card {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border-left: 5px solid transparent;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .kanban-card p {
+            margin: 5px 0;
+        }
+
+        .status-urgent .kanban-card {
+            border-left-color: var(--urgent-color);
+            border: 1px solid var(--urgent-color);
+        }
+        
+        .status-ready .kanban-card {
+            border-left-color: var(--ready-color);
+            border: 1px solid var(--ready-color);
+        }
+
+        .status-filling .kanban-card {
+            border-left-color: var(--filling-color);
+            opacity: 0.7;
+        }
+
+        .column-urgent h3 { color: var(--urgent-color); border-color: var(--urgent-color); }
+        .column-ready h3 { color: var(--ready-color); border-color: var(--ready-color); }
+        .column-filling h3 { color: var(--filling-color); border-color: var(--filling-color); }
+
+        .btn-small {
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            width: auto;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Doctorra</h1>
+    </header>
+    
+    <div class="container-fluid"> <!-- Used fluid for dashboard, constrained for others -->
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="container">
+                    {% for message in messages %}
+                        <div class="flash-messages">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

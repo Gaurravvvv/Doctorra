@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <h2>Patient Check-In</h2>
+        <form method="POST">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" required placeholder="John Doe">
+
+            <label for="age">Age</label>
+            <input type="number" id="age" name="age" required placeholder="30">
+
+            <label for="phone">Phone Number</label>
+            <input type="text" id="phone" name="phone" required placeholder="555-0123">
+
+            <button type="submit" class="btn-primary">Start Check-In</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <h2>Describe Your Symptoms</h2>
+        <form method="POST">
+            <label for="symptom-select">Select Main Symptom</label>
+            <select id="symptom-select" name="selected_symptom_key" required onchange="showQuestions()">
+                <option value="" disabled selected>-- Select --</option>
+                {% for symptom_name in symptoms.keys() %}
+                <option value="{{ symptom_name }}">{{ symptom_name }}</option>
+                {% endfor %}
+            </select>
+
+            <div id="questions-container" style="margin-top: 20px;">
+                {% for symptom_name, details in symptoms.items() %}
+                <div id="symptom-{{ symptom_name | replace(' ', '-') | replace('/', '-') }}" class="symptom-questions" style="display: none;">
+                    {% for q_obj in details.questions %}
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label style="font-weight: 600;">{{ q_obj.text }}</label>
+                        
+                        {% if q_obj.options %}
+                            <!-- Render Options as Radio Buttons -->
+                            <div class="options-group">
+                                {% for opt in q_obj.options %}
+                                <div style="margin-bottom: 5px;">
+                                    <input type="radio" id="{{ q_obj.text }}-{{ loop.index }}" name="{{ q_obj.text }}" value="{{ opt }}" onclick="toggleOther(this, '{{ q_obj.text }}_other_container')">
+                                    <label for="{{ q_obj.text }}-{{ loop.index }}" style="display: inline; font-weight: normal;">{{ opt }}</label>
+                                </div>
+                                {% endfor %}
+                                <!-- Always add an 'Other' option if options exist -->
+                                <div>
+                                    <input type="radio" id="{{ q_obj.text }}-other" name="{{ q_obj.text }}" value="Other" onclick="toggleOther(this, '{{ q_obj.text }}_other_container')">
+                                    <label for="{{ q_obj.text }}-other" style="display: inline; font-weight: normal;">Other (Type below)</label>
+                                </div>
+                            </div>
+                            
+                            <!-- Hidden text input for 'Other' -->
+                            <div id="{{ q_obj.text }}_other_container" style="display: none; margin-top: 5px; margin-left: 20px;">
+                                <input type="text" name="{{ q_obj.text }}_other" placeholder="Please specify...">
+                            </div>
+
+                        {% else %}
+                            <!-- No options, just a text input -->
+                            <input type="text" name="{{ q_obj.text }}">
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div id="submit-btn-container" style="display: none; margin-top: 20px;">
+                <button type="submit" name="answers" value="true" class="btn-primary">Submit Assessment</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function showQuestions() {
+        // Hide all questions
+        const allQuestions = document.querySelectorAll('.symptom-questions');
+        allQuestions.forEach(div => {
+            div.style.display = 'none';
+        });
+
+        // Get selected value
+        const select = document.getElementById('symptom-select');
+        const selectedValue = select.value;
+
+        if (selectedValue) {
+            // Show specific questions
+            const safeId = selectedValue.replace(/ /g, '-').replace(/\//g, '-');
+            const targetDiv = document.getElementById('symptom-' + safeId);
+            if (targetDiv) {
+                targetDiv.style.display = 'block';
+            }
+            
+            // Show submit button
+            document.getElementById('submit-btn-container').style.display = 'block';
+        }
+    }
+
+    function toggleOther(radio, otherContainerId) {
+        const container = document.getElementById(otherContainerId);
+        if (!container) return; // Case where there is no other container
+
+        if (radio.value === 'Other') {
+            container.style.display = 'block';
+            container.querySelector('input').required = true;
+        } else {
+            container.style.display = 'none';
+            container.querySelector('input').required = false;
+        }
+    }
+</script>
+{% endblock %}

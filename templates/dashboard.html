@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block content %}
+<meta http-equiv="refresh" content="30">
+
+<div class="container-fluid">
+    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
+        <h2>Doctor's Dashboard</h2>
+        <div>
+            <a href="{{ url_for('history') }}" class="btn-primary btn-small" style="text-decoration: none; width: auto; background-color: #1565C0; margin-right: 10px;">History</a>
+            <a href="{{ url_for('logout') }}" class="btn-primary btn-small" style="text-decoration: none; width: auto; background-color: #555;">Logout</a>
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <!-- URGENT COLUMN -->
+        <div class="column column-urgent status-urgent">
+            <h3>URGENT</h3>
+            {% for visit in urgent %}
+            <div class="kanban-card">
+                <div style="display: flex; justify-content: space-between;">
+                    <strong>#{{ visit.id }} {{ visit.patient.name }}</strong>
+                    <span style="color: #d32f2f; font-weight: bold;">{{ visit.patient.age }}y</span>
+                </div>
+                {% set sym_data = visit.symptoms | from_json %}
+                <p><strong>{{ sym_data.get('Main Symptom', 'Unknown') }}</strong></p>
+                
+                <details style="margin: 10px 0; background: #fff0f0; padding: 5px; border-radius: 4px;">
+                    <summary style="cursor: pointer; color: #d32f2f;">View Details</summary>
+                    <ul style="padding-left: 20px; margin: 5px 0; font-size: 0.9em;">
+                        {% for q, a in sym_data.get('Answers', {}).items() %}
+                        <li><strong>{{ q }}:</strong> {{ a }}</li>
+                        {% endfor %}
+                    </ul>
+                </details>
+
+                <form action="{{ url_for('mark_treated', visit_id=visit.id) }}" method="POST">
+                    <button type="submit" class="btn-primary btn-small" style="background-color: #d32f2f;">Mark Treated</button>
+                </form>
+            </div>
+            {% else %}
+            <p style="text-align: center; color: #999;">No urgent cases.</p>
+            {% endfor %}
+        </div>
+
+        <!-- WAITING / READY COLUMN -->
+        <div class="column column-ready status-ready">
+            <h3>WAITING</h3>
+            {% for visit in ready %}
+            <div class="kanban-card">
+                <div style="display: flex; justify-content: space-between;">
+                    <strong>#{{ visit.id }} {{ visit.patient.name }}</strong>
+                    <span>{{ visit.patient.age }}y</span>
+                </div>
+                {% set sym_data = visit.symptoms | from_json %}
+                <p><strong>{{ sym_data.get('Main Symptom', 'Unknown') }}</strong></p>
+                
+                <details style="margin: 10px 0; background: #e8f5e9; padding: 5px; border-radius: 4px;">
+                    <summary style="cursor: pointer; color: #388e3c;">View Details</summary>
+                    <ul style="padding-left: 20px; margin: 5px 0; font-size: 0.9em;">
+                        {% for q, a in sym_data.get('Answers', {}).items() %}
+                        <li><strong>{{ q }}:</strong> {{ a }}</li>
+                        {% endfor %}
+                    </ul>
+                </details>
+
+                <form action="{{ url_for('mark_treated', visit_id=visit.id) }}" method="POST">
+                    <button type="submit" class="btn-primary btn-small" style="background-color: #388e3c;">Mark Treated</button>
+                </form>
+            </div>
+            {% else %}
+            <p style="text-align: center; color: #999;">No patients waiting.</p>
+            {% endfor %}
+        </div>
+
+        <!-- ARRIVING / FILLING COLUMN -->
+        <div class="column column-filling status-filling">
+            <h3>ARRIVING</h3>
+            {% for visit in filling %}
+            <div class="kanban-card">
+                <div style="display: flex; justify-content: space-between;">
+                    <strong>#{{ visit.id }} {{ visit.patient.name }}</strong>
+                    <span>{{ visit.patient.age }}y</span>
+                </div>
+                <p><em>Filling forms...</em></p>
+                <p style="font-size: 0.8em; color: #777;">Started: {{ visit.arrival_time.strftime('%H:%M') }}</p>
+            </div>
+            {% else %}
+            <p style="text-align: center; color: #999;">No new arrivals.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
