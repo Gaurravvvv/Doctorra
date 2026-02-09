@@ -3,96 +3,106 @@
 {% block content %}
 <div class="container">
     <div class="card">
+        
+        {% if not data or not data.questions %}
+        <!-- PHASE 1: CATEGORY & COMPLAINT INPUT -->
         <h2>Describe Your Symptoms</h2>
+        <p>Please select a category and briefly describe your condition.</p>
+        
         <form method="POST">
-            <label for="symptom-select">Select Main Symptom</label>
-            <select id="symptom-select" name="selected_symptom_key" required onchange="showQuestions()">
-                <option value="" disabled selected>-- Select --</option>
-                {% for symptom_name in symptoms.keys() %}
-                <option value="{{ symptom_name }}">{{ symptom_name }}</option>
-                {% endfor %}
-            </select>
-
-            <div id="questions-container" style="margin-top: 20px;">
-                {% for symptom_name, details in symptoms.items() %}
-                <div id="symptom-{{ symptom_name | replace(' ', '-') | replace('/', '-') }}" class="symptom-questions" style="display: none;">
-                    {% for q_obj in details.questions %}
-                    <div class="form-group" style="margin-bottom: 20px;">
-                        <label style="font-weight: 600;">{{ q_obj.text }}</label>
-                        
-                        {% if q_obj.options %}
-                            <!-- Render Options as Radio Buttons -->
-                            <div class="options-group">
-                                {% for opt in q_obj.options %}
-                                <div style="margin-bottom: 5px;">
-                                    <input type="radio" id="{{ q_obj.text }}-{{ loop.index }}" name="{{ q_obj.text }}" value="{{ opt }}" onclick="toggleOther(this, '{{ q_obj.text }}_other_container')">
-                                    <label for="{{ q_obj.text }}-{{ loop.index }}" style="display: inline; font-weight: normal;">{{ opt }}</label>
-                                </div>
-                                {% endfor %}
-                                <!-- Always add an 'Other' option if options exist -->
-                                <div>
-                                    <input type="radio" id="{{ q_obj.text }}-other" name="{{ q_obj.text }}" value="Other" onclick="toggleOther(this, '{{ q_obj.text }}_other_container')">
-                                    <label for="{{ q_obj.text }}-other" style="display: inline; font-weight: normal;">Other (Type below)</label>
-                                </div>
-                            </div>
-                            
-                            <!-- Hidden text input for 'Other' -->
-                            <div id="{{ q_obj.text }}_other_container" style="display: none; margin-top: 5px; margin-left: 20px;">
-                                <input type="text" name="{{ q_obj.text }}_other" placeholder="Please specify...">
-                            </div>
-
-                        {% else %}
-                            <!-- No options, just a text input -->
-                            <input type="text" name="{{ q_obj.text }}">
-                        {% endif %}
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endfor %}
+            <div class="form-group">
+                <label for="main_category" style="font-weight: 600;">Primary Condition</label>
+                <select id="main_category" name="main_category" class="form-control" style="width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 5px;" required>
+                    <option value="" disabled selected>-- Select Category --</option>
+                    <option value="General Discomfort">General Discomfort</option>
+                    <option value="Accident/Trauma">Accident / Trauma / Injury</option>
+                    <option value="Fever/Flu">Fever / Cold / Flu</option>
+                    <option value="Stomach/Digestion">Stomach / Digestion</option>
+                    <option value="Breathing Issue">Breathing Difficulty / Chest Pain</option>
+                    <option value="Skin Issue">Skin Issue / Rash / Allergy</option>
+                    <option value="Other">Other</option>
+                </select>
             </div>
 
-            <div id="submit-btn-container" style="display: none; margin-top: 20px;">
-                <button type="submit" name="answers" value="true" class="btn-primary">Submit Assessment</button>
+            <div class="form-group">
+                <label for="complaint_text" style="font-weight: 600;">Description</label>
+                <textarea id="complaint_text" name="complaint_text" class="form-control" rows="4" placeholder="E.g., I fell down the stairs and my ankle is swollen..." style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;"></textarea>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <button type="submit" class="btn-primary">Next</button>
             </div>
         </form>
+
+        {% else %}
+        <!-- PHASE 2: AI QUESTIONS -->
+        <h2>Assessment Questions</h2>
+        <div style="margin-bottom: 20px;">
+            <span class="badge" style="background: #e0f7fa; color: #006064; padding: 5px 10px; border-radius: 4px; display: inline-block;">Category: {{ data.category }}</span>
+            {% if data.is_ai %}
+                <span class="badge" style="background: #E3F2FD; color: #1565C0; padding: 5px 10px; border-radius: 4px; display: inline-block; margin-left: 10px; font-weight: bold; border: 1px solid #1565C0;">✨ AI Generated</span>
+            {% else %}
+                <span class="badge" style="background: #f5f5f5; color: #616161; padding: 5px 10px; border-radius: 4px; display: inline-block; margin-left: 10px; font-weight: bold; border: 1px solid #bdbdbd;">📋 Standard Assessment</span>
+            {% endif %}
+        </div>
+        
+        <form method="POST" style="margin-top: 20px;">
+            {% for q in data.questions %}
+            {% set q_loop = loop %}
+            <div class="form-group" style="margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+                <label style="font-weight: 600; display: block; margin-bottom: 10px;">{{ q_loop.index }}. {{ q.question_text }}</label>
+                
+                <div class="options-group">
+                    {% for opt in q.options %}
+                    <div style="margin-bottom: 8px;">
+                        <input type="radio" 
+                               id="q{{ q_loop.index0 }}_opt{{ loop.index }}" 
+                               name="answer_{{ q_loop.index0 }}" 
+                               value="{{ opt }}" 
+                               onclick="toggleOther('other_container_{{ q_loop.index0 }}', false)" required>
+                        <label for="q{{ q_loop.index0 }}_opt{{ loop.index }}" style="font-weight: normal; cursor: pointer;">{{ opt }}</label>
+                    </div>
+                    {% endfor %}
+                    
+                    <!-- Always add 'Other' -->
+                    <div>
+                        <input type="radio" 
+                               id="q{{ q_loop.index0 }}_other" 
+                               name="answer_{{ q_loop.index0 }}" 
+                               value="Other" 
+                               onclick="toggleOther('other_container_{{ q_loop.index0 }}', true)">
+                        <label for="q{{ q_loop.index0 }}_other" style="font-weight: normal; cursor: pointer;">Other</label>
+                    </div>
+                </div>
+
+                <!-- Hidden Text Input -->
+                <div id="other_container_{{ q_loop.index0 }}" style="display: none; margin-top: 10px; margin-left: 20px;">
+                    <input type="text" name="other_{{ q_loop.index0 }}" placeholder="Please specify..." style="width: 80%; padding: 5px;">
+                </div>
+            </div>
+            {% endfor %}
+
+            <div style="margin-top: 20px;">
+                <button type="submit" name="submit_answers" value="true" class="btn-primary">Submit Assessment</button>
+            </div>
+        </form>
+        {% endif %}
+
     </div>
 </div>
 
 <script>
-    function showQuestions() {
-        // Hide all questions
-        const allQuestions = document.querySelectorAll('.symptom-questions');
-        allQuestions.forEach(div => {
-            div.style.display = 'none';
-        });
-
-        // Get selected value
-        const select = document.getElementById('symptom-select');
-        const selectedValue = select.value;
-
-        if (selectedValue) {
-            // Show specific questions
-            const safeId = selectedValue.replace(/ /g, '-').replace(/\//g, '-');
-            const targetDiv = document.getElementById('symptom-' + safeId);
-            if (targetDiv) {
-                targetDiv.style.display = 'block';
-            }
-            
-            // Show submit button
-            document.getElementById('submit-btn-container').style.display = 'block';
-        }
-    }
-
-    function toggleOther(radio, otherContainerId) {
-        const container = document.getElementById(otherContainerId);
-        if (!container) return; // Case where there is no other container
-
-        if (radio.value === 'Other') {
+    function toggleOther(containerId, show) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        
+        const input = container.querySelector('input');
+        if (show) {
             container.style.display = 'block';
-            container.querySelector('input').required = true;
+            if(input) input.required = true;
         } else {
             container.style.display = 'none';
-            container.querySelector('input').required = false;
+            if(input) input.required = false;
         }
     }
 </script>
