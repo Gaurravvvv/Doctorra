@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="max-width: 500px; margin-top: 50px;">
+    <div class="card">
+        <h2 style="text-align: center;">Patient Check-In</h2>
+        <div style="text-align: center; margin-bottom: 20px; background: #E3F2FD; padding: 15px; border-radius: 12px;">
+            <p style="margin: 0; font-size: 0.9em; color: #1565C0;">Booking Appointment with</p>
+            <h3 style="margin: 5px 0; color: #1565C0;">{{ doctor.full_name }}</h3>
+            <span style="font-size: 0.85em; background: white; padding: 2px 8px; border-radius: 4px; color: #555;">{{ doctor.specialization }}</span>
+        </div>
+
+        <form method="POST">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" id="name" name="name" placeholder="John Doe" required>
+            </div>
+
+            <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" placeholder="30" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="text" id="phone" name="phone" placeholder="9876543210" required>
+            </div>
+
+            <button type="submit" class="btn-primary">Start Intake</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

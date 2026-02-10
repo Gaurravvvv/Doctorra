@@ -5,10 +5,29 @@
 
 <div class="container-fluid">
     <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
-        <h2>Doctor's Dashboard</h2>
+        <div>
+            <h2>Doctor's Dashboard</h2>
+            <p style="margin-top: -15px; color: #666;">Welcome, {{ doctor.full_name }} ({{ doctor.specialization }})</p>
+        </div>
         <div>
             <a href="{{ url_for('history') }}" class="btn-primary btn-small" style="text-decoration: none; width: auto; background-color: #1565C0; margin-right: 10px;">History</a>
             <a href="{{ url_for('logout') }}" class="btn-primary btn-small" style="text-decoration: none; width: auto; background-color: #555;">Logout</a>
+        </div>
+    </div>
+
+    <!-- Clinic Assets Card -->
+    <div style="padding: 0 24px; margin-bottom: 20px;">
+        <div class="card" style="padding: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; background: linear-gradient(to right, #ffffff, #f8faff);">
+            <div>
+                <h3 style="margin: 0; color: #1565C0;">Your Clinic ID: <span style="font-family: monospace; background: #e3f2fd; padding: 5px 10px; border-radius: 6px;">{{ doctor.unique_code }}</span></h3>
+                <p style="margin: 5px 0; color: #666; font-size: 0.9rem;">Share this code or QR with patients to check in.</p>
+                <button onclick="copyLink()" class="btn-small" style="border: 1px solid #ccc; background: white; cursor: pointer; margin-top: 10px;">Copy Booking Link</button>
+            </div>
+            <div style="text-align: center;">
+                <img src="data:image/png;base64,{{ qr_code }}" alt="Clinic QR Code" style="width: 120px; height: 120px; border-radius: 8px; border: 1px solid #ddd;">
+                <br>
+                <small style="color: #999;">Scan to Book</small>
+            </div>
         </div>
     </div>
 
@@ -103,4 +122,15 @@
         </div>
     </div>
 </div>
+
+<script>
+function copyLink() {
+    const link = "{{ url_for('book_appointment', unique_code=doctor.unique_code, _external=True) }}";
+    navigator.clipboard.writeText(link).then(function() {
+        alert('Booking Link Copied!');
+    }, function(err) {
+        console.error('Could not copy text: ', err);
+    });
+}
+</script>
 {% endblock %}

@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" style="max-width: 600px; margin-top: 50px;">
+    <div class="card" style="text-align: center;">
+        <h2>Find Your Doctor</h2>
+        <p style="color: #666;">Scan the clinic's QR code or enter the Doctor ID below.</p>
+
+        <div id="reader" width="600px" style="margin: 0 auto; display: none; margin-bottom: 20px;"></div>
+        
+        <button id="scanBtn" class="btn-primary" style="margin-bottom: 30px; background: #333;">📷 Scan QR Code</button>
+
+        <div style="display: flex; align-items: center; margin: 20px 0;">
+            <hr style="flex: 1; border-top: 1px solid #ddd;">
+            <span style="padding: 0 10px; color: #999; font-weight: bold;">OR</span>
+            <hr style="flex: 1; border-top: 1px solid #ddd;">
+        </div>
+
+        <form action="{{ url_for('find_doctor') }}" method="POST">
+            <div class="form-group">
+                <label for="unique_code">Enter Doctor ID</label>
+                <input type="text" id="unique_code" name="unique_code" placeholder="e.g. DR-SMI-9921" style="text-align: center; letter-spacing: 2px; font-weight: bold; text-transform: uppercase;" required>
+            </div>
+            <button type="submit" class="btn-primary">Connect</button>
+        </form>
+    </div>
+</div>
+
+<!-- HTML5-QRCode Library -->
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<script>
+    const scanBtn = document.getElementById('scanBtn');
+    const readerDiv = document.getElementById('reader');
+    let html5QrcodeScanner;
+
+    scanBtn.addEventListener('click', () => {
+        if (readerDiv.style.display === 'none') {
+            readerDiv.style.display = 'block';
+            startScanning();
+            scanBtn.textContent = 'Stop Scanning';
+        } else {
+            stopScanning();
+        }
+    });
+
+    function startScanning() {
+        html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader",
+            { fps: 10, qrbox: {width: 250, height: 250} },
+            /* verbose= */ false);
+            
+        html5QrcodeScanner.render(onScanSuccess, onScanFailure);
+    }
+    
+    function stopScanning() {
+        if (html5QrcodeScanner) {
+            html5QrcodeScanner.clear().then(() => {
+                readerDiv.style.display = 'none';
+                scanBtn.textContent = '📷 Scan QR Code';
+            }).catch(error => {
+                console.error("Failed to clear html5QrcodeScanner. ", error);
+            });
+        }
+    }
+
+    function onScanSuccess(decodedText, decodedResult) {
+        // Handle the scanned code as you like, for example:
+        console.log(`Code matched = ${decodedText}`, decodedResult);
+        
+        // If the QR code is a full URL, redirect
+        if (decodedText.startsWith("http")) {
+            window.location.href = decodedText;
+        } else {
+            // Assume it's just the code
+            const uniqueCode = decodedText.split('/').pop(); // simplistic extraction if URL
+            // Or if just code
+            document.getElementById('unique_code').value = decodedText;
+            document.forms[0].submit();
+        }
+        stopScanning();
+    }
+
+    function onScanFailure(error) {
+        // handle scan failure, usually better to ignore and keep scanning.
+        // console.warn(`Code scan error = ${error}`);
+    }
+</script>
+{% endblock %}
