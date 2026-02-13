@@ -1,0 +1,38 @@
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - DATABASE_URL=mysql+mysqlconnector://root:password@db/doctorra
+      # Pass through other environment variables from the host or .env file
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - FLASK_ENV=development
+    depends_on:
+      - db
+    volumes:
+      - .:/app  # Mount current directory for hot reloading (optional, good for dev)
+    networks:
+      - doctorra-network
+
+  db:
+    image: mysql:8.0
+    container_name: doctorra_db
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: doctorra
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - doctorra-network
+
+volumes:
+  db_data:
+
+networks:
+  doctorra-network:
+    driver: bridge

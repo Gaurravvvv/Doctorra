@@ -378,6 +378,10 @@ def register():
             flash('Email already registered.')
             return redirect(url_for('doctor_login'))
 
+        if Doctor.query.filter_by(username=username).first():
+            flash('Username already exists.')
+            return redirect(url_for('doctor_login'))
+
         hashed_pw = generate_password_hash(password)
         new_doctor = Doctor(username=username, email=email, password=hashed_pw)
         db.session.add(new_doctor)
@@ -591,4 +595,4 @@ def init_db():
 
 if __name__ == '__main__':
     init_db()
-    app.run(debug=True)
+    app.run(host='0.0.0.0', debug=True)
