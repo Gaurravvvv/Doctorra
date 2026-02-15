@@ -24,7 +24,7 @@ load_dotenv()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'doctorra-secret-key-123'
 # MySQL Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'mysql+mysqlconnector://root:password@localhost/doctorra')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'mysql+mysqlconnector://root:gaurav@db/doctorra')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {'pool_recycle': 280}
 
