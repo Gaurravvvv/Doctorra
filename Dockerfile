@@ -25,5 +25,5 @@ COPY . .
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
 
-# Run app.py when the container launches
-CMD ["python", "app.py"]
+# Run run.py when the container launches
+CMD ["python", "run.py"]

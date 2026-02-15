@@ -13,7 +13,8 @@ services:
     depends_on:
       - db
     volumes:
-      - .:/app  # Mount current directory for hot reloading (optional, good for dev)
+      - .:/app  # Mount current directory for hot reloading
+    command: python run.py
     networks:
       - doctorra-network
 

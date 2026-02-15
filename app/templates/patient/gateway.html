@@ -16,7 +16,7 @@
             <hr style="flex: 1; border-top: 1px solid #ddd;">
         </div>
 
-        <form action="{{ url_for('find_doctor') }}" method="POST">
+        <form action="{{ url_for('patient.find_doctor') }}" method="POST">
             <div class="form-group">
                 <label for="unique_code">Enter Doctor ID</label>
                 <input type="text" id="unique_code" name="unique_code" placeholder="e.g. DR-SMI-9921" style="text-align: center; letter-spacing: 2px; font-weight: bold; text-transform: uppercase;" required>

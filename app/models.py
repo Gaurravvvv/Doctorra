@@ -1,6 +1,6 @@
 from datetime import datetime
 from sqlalchemy.dialects.mysql import JSON
-from extensions import db
+from .extensions import db
 
 class Doctor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -21,14 +21,7 @@ class Patient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     age = db.Column(db.Integer, nullable=False)
-    phone = db.Column(db.String(20), nullable=False) # Removed unique=True to allow same phone for diff doctors/visits if needed, or keeping unique globally? 
-    # Logic: If unique=True, a patient can only be registered once system-wide. 
-    # With multi-tenant, maybe a patient visits Dr A then Dr B. 
-    # For now, I'll keep the unique constraint if it was there, but strictly speaking, `phone` unique global might be an issue.
-    # The prompt didn't say remove it, but typically multi-tenant allows same patient. 
-    # I'll relax the unique constraint on phone to allow re-registration or check existence carefully.
-    # Existing code: phone = db.Column(db.String(20), unique=True, nullable=False)
-    # I will KEEP unique=True but handle the lookup logic in app.py to find existing patient.
+    phone = db.Column(db.String(20), nullable=False) 
     
     doctor_id = db.Column(db.Integer, db.ForeignKey('doctor.id'), nullable=False)
     visits = db.relationship('Visit', backref='patient', lazy=True)
