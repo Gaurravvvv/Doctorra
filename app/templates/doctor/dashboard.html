@@ -4,14 +4,14 @@
 <meta http-equiv="refresh" content="30">
 
 <div class="container-fluid">
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
+    <div class="dashboard-header">
         <div>
             <h2>Doctor's Dashboard</h2>
             <p style="margin-top: -15px; color: #666;">Welcome, {{ doctor.full_name }} ({{ doctor.specialization }})</p>
         </div>
-        <div>
-            <a href="{{ url_for('doctor.history') }}" class="btn-primary btn-small" style="text-decoration: none; width: auto; background-color: #1565C0; margin-right: 10px;">History</a>
-            <a href="{{ url_for('auth.logout') }}" class="btn-primary btn-small" style="text-decoration: none; width: auto; background-color: #555;">Logout</a>
+        <div class="btn-group">
+            <a href="{{ url_for('doctor.history') }}" class="btn-primary btn-small" style="text-decoration: none; background-color: #1565C0;">History</a>
+            <a href="{{ url_for('auth.logout') }}" class="btn-primary btn-small" style="text-decoration: none; background-color: #555;">Logout</a>
         </div>
     </div>
 
