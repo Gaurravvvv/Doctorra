@@ -32,7 +32,14 @@
                     <td style="padding: 10px;">{{ visit.patient.name }}</td>
                     <td style="padding: 10px;">{{ visit.patient.age }}</td>
                     {% set sym_data = visit.symptoms | from_json %}
-                    <td style="padding: 10px;">{{ sym_data.get('Main Symptom', 'Unknown') }}</td>
+                    <td style="padding: 10px;">
+                        {{ sym_data.get('Main Symptom', 'Unknown') }}
+                        {% if sym_data.get('is_ai') %}
+                            <small style="color: #1565C0; background: #E3F2FD; padding: 2px 5px; border-radius: 3px; font-weight: bold; font-size: 0.75em;">✨ AI</small>
+                        {% else %}
+                            <small style="color: #616161; background: #f5f5f5; padding: 2px 5px; border-radius: 3px; font-weight: bold; font-size: 0.75em;">📋 Std</small>
+                        {% endif %}
+                    </td>
                     <td style="padding: 10px;">
                         <details>
                             <summary style="cursor: pointer; color: #1565C0;">Expand</summary>

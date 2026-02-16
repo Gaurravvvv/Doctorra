@@ -1,33 +1,41 @@
-# Doctorra 🏥
+# Doctorra 🏥 - Clinic Queue & Intake Management System
 
-Doctorra is a Clinic Queue & Intake Management System (MVP) designed to digitize patient intake and streamline clinic operations. It allows patients to perform a "soft login" via a QR code or web link, answer a symptom-based decision tree, and be automatically triaged (Urgent vs. Normal) into a live dashboard for the doctor.
+Doctorra is an AI-powered Clinic Queue and Intake Management System designed to digitize patient intake and streamline clinic operations. It transforms the traditional waiting room experience into a dynamic, data-driven workflow.
 
-## 🚀 Features
+## 🌟 Key Features
 
-### For Patients
-*   **Soft Login:** Quick check-in using Name, Age, and Phone Number.
-*   **Symptom Assessment:** Dynamic question flow based on the selected main symptom.
-*   **Easy Input:** Multiple-choice questions for common symptoms, with an "Other" option for manual typing.
-*   **Real-time Status:** View assigned token number and wait status.
+### 👤 For Patients
+*   **Soft Login & Check-in:** Simple entry using Name, Age, and Phone Number—no complex accounts needed for immediate care.
+*   **AI-Powered Intake:** Uses **Gemini 2.5 Flash-Lite** to generate a context-aware medical questionnaire based on the patient's initial complaint.
+*   **Intelligent Triage:** Automatically categorizes patients as "Urgent" or "Normal" based on their AI-generated intake responses.
+*   **Real-time Feedback:** Provides patients with a token number and status confirmation immediately after intake completion.
 
-### For Doctors
-*   **Live Dashboard:** Auto-refreshing Kanban board (updates every 30 seconds).
-*   **Automated Triage:**
-    *   🔴 **Urgent:** Red card (e.g., Accident, Breathing Difficulty).
-    *   🟢 **Waiting:** Green card (Standard symptoms).
-    *   ⚪ **Arriving:** Grey card (Patients currently filling forms).
-*   **Patient Details:** Expandable cards to view full symptom history and answers.
-*   **Patient History:** A dedicated log of all treated patients, sortable by date/time.
+### 🩺 For Doctors
+*   **Live Kanban Dashboard:** A real-time board visualizing the patient flow:
+    *   🔴 **Urgent:** High-priority cases requiring immediate attention.
+    *   🟢 **Ready:** Patients who have completed intake and are waiting.
+    *   ⚪ **Arriving:** Patients currently in the process of filling out their intake forms.
+*   **Detailed Patient Insights:** Expandable cards showing the full AI-generated questionnaire and patient responses.
+*   **Patient History Log:** A searchable and sortable archive of all treated patients for record-keeping.
+*   **Secure Authentication:** Supports both traditional username/password and **Google OAuth** for secure access to the medical dashboard.
 
 ## 🛠️ Tech Stack
 
-*   **Language:** Python 3.x
-*   **Framework:** Flask (Micro-framework)
-*   **Database:** SQLite (SQLAlchemy ORM)
-*   **Frontend:** HTML5, CSS3, Vanilla JavaScript (No heavy frameworks)
-*   **Styling:** Custom "Clinical Theme" (CSS Variables)
+*   **Backend:** Python 3.x, [Flask](https://flask.palletsprojects.com/)
+*   **Database:** MySQL with [SQLAlchemy ORM](https://www.sqlalchemy.org/)
+*   **AI Engine:** [LangChain](https://www.langchain.com/) + [Google Gemini 2.5 Flash-Lite](https://ai.google.dev/)
+*   **Frontend:** HTML5, CSS3, Vanilla JavaScript, Jinja2 Templates
+*   **Authentication:** [Authlib](https://docs.authlib.org/) for Google OAuth
 
-## ⚙️ Installation & Setup
+## 🚀 Getting Started
+
+### Prerequisites
+*   Python 3.8+
+*   MySQL Server
+*   Google Gemini API Key
+*   Google Cloud Console Project (for OAuth)
+
+### Installation
 
 1.  **Clone the Repository**
     ```bash
@@ -35,63 +43,59 @@ Doctorra is a Clinic Queue & Intake Management System (MVP) designed to digitize
     cd Doctorra
     ```
 
-2.  **Create a Virtual Environment (Optional but Recommended)**
+2.  **Environment Setup**
     ```bash
-    # Windows
+    # Create and activate virtual environment
     python -m venv venv
-    venv\Scripts\activate
-
-    # Mac/Linux
-    python3 -m venv venv
-    source venv/bin/activate
+    source venv/bin/activate  # On Windows: venv\Scripts\activate
     ```
 
 3.  **Install Dependencies**
     ```bash
-    pip install flask flask-sqlalchemy
+    pip install -r requirements.txt
     ```
 
-4.  **Run the Application**
+4.  **Configuration**
+    Create a `.env` file in the root directory:
+    ```ini
+    DATABASE_URL=mysql+mysqlconnector://root:password@localhost/doctorra
+    GEMINI_API_KEY=your_gemini_api_key
+    GOOGLE_CLIENT_ID=your_google_client_id
+    GOOGLE_CLIENT_SECRET=your_google_client_secret
+    SECRET_KEY=your_flask_secret_key
+    ```
+
+5.  **Initialize & Run**
     ```bash
     python app.py
     ```
-    *   The database (`doctorra.db`) will be automatically created on the first run.
-    *   A default admin user is created automatically.
+    *The application will automatically create the database tables and a default admin user (`admin`/`admin`) on the first run.*
 
-## 📖 Usage Guide
-
-### 1. Patient Interface
-*   Open your browser and navigate to `http://127.0.0.1:5000/`.
-*   Enter your details to check in.
-*   Select your symptoms and answer the specific questions.
-*   Receive your token number.
-
-### 2. Doctor Dashboard
-*   Navigate to `http://127.0.0.1:5000/login`.
-*   **Default Credentials:**
-    *   **Username:** `admin`
-    *   **Password:** `admin`
-*   View the live Kanban board.
-*   Click **"View Details"** to see patient answers.
-*   Click **"Mark Treated"** to move a patient to the history log.
-*   Click **"History"** in the header to view past records.
-
-## 📂 Project Structure
+## 📂 Project Architecture
 
 ```
 Doctorra/
-├── app.py                # Main Flask application, models, and routes
-├── doctorra.db           # SQLite Database (Created on run)
-├── templates/            # HTML Templates
-│   ├── base.html         # Base layout with CSS
-│   ├── patient_login.html
-│   ├── intake.html       # Dynamic symptom form
-│   ├── success.html      # Token display
-│   ├── login.html        # Doctor login
-│   ├── dashboard.html    # Kanban board
-│   └── history.html      # Treated patient log
-└── README.md             # Project documentation
+├── app.py              # Application factory, Database models & AI Logic
+├── requirements.txt    # Project dependencies
+├── .env                # Environment configuration
+├── templates/          # Jinja2 HTML templates
+│   ├── base.html       # Shared layout
+│   ├── patient_login.html # Patient check-in
+│   ├── intake.html      # AI-generated dynamic questionnaire
+│   ├── login.html       # Doctor login (Password/OAuth)
+│   ├── dashboard.html   # Real-time Kanban board
+│   ├── history.html     # Patient treatment logs
+│   └── success.html     # Patient token confirmation
+└── static/             # CSS, JS, and Images (if applicable)
 ```
 
+## 🧠 AI Workflow
+
+1.  **Complaint Submission:** Patient provides a brief description (e.g., "Sharp chest pain").
+2.  **Prompt Engineering:** The app sends the complaint and category to Gemini via LangChain with a structured medical triage prompt.
+3.  **Dynamic JSON Generation:** Gemini returns a JSON object containing tailored questions, options, and an initial urgency assessment.
+4.  **Intake Execution:** The UI dynamically renders these questions for the patient.
+5.  **Status Update:** Upon completion, the visit is flagged as `urgent` or `ready` on the doctor's board.
+
 ## 📜 License
-This project is an MVP created for educational and demonstration purposes.
+Developed as an MVP for clinical intake optimization and educational purposes.

@@ -1,18 +1,80 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container" style="max-width: 400px; margin-top: 50px;">
-    <div class="card">
-        <h2 style="text-align: center;">Doctor Login</h2>
-        <form method="POST">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" required>
+<div class="container" style="max-width: 420px; margin-top: 50px;">
+    <div class="card" style="position: relative;">
+        
+        <!-- SIGN IN SECTION -->
+        <div id="login-section">
+            <h2 style="text-align: center;">Doctor Login</h2>
+            <form method="POST" action="{{ url_for('doctor_login') }}">
+                <div class="form-group">
+                    <label for="login_username">Username</label>
+                    <input type="text" id="login_username" name="username" required>
+                </div>
 
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
+                <div class="form-group">
+                    <label for="login_password">Password</label>
+                    <input type="password" id="login_password" name="password" required>
+                </div>
 
-            <button type="submit" class="btn-primary">Login</button>
-        </form>
+                <button type="submit" class="btn-primary" style="margin-top: 10px;">Login</button>
+            </form>
+
+            <div style="text-align: center; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
+                <p style="color: #666; margin-bottom: 10px;">Or sign in with</p>
+                <a href="{{ url_for('google_login') }}" class="btn-primary" style="background-color: #db4437; border-color: #db4437; width: 100%; display: inline-block; text-decoration: none;">
+                    Sign in with Google
+                </a>
+            </div>
+
+            <div style="text-align: center; margin-top: 15px;">
+                <p style="font-size: 0.9em;">Don't have an account? <a href="#" onclick="toggleAuth('register')" style="color: var(--primary-color); font-weight: 600;">Sign Up</a></p>
+            </div>
+        </div>
+
+        <!-- SIGN UP SECTION (Hidden by default) -->
+        <div id="register-section" style="display: none;">
+            <h2 style="text-align: center;">Create Account</h2>
+            <form method="POST" action="{{ url_for('register') }}">
+                <div class="form-group">
+                    <label for="reg_username">Username</label>
+                    <input type="text" id="reg_username" name="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg_email">Email Address</label>
+                    <input type="email" id="reg_email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="reg_password">Password</label>
+                    <input type="password" id="reg_password" name="password" required>
+                </div>
+
+                <button type="submit" class="btn-primary" style="margin-top: 10px;">Register</button>
+            </form>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <p style="font-size: 0.9em;">Already have an account? <a href="#" onclick="toggleAuth('login')" style="color: var(--primary-color); font-weight: 600;">Sign In</a></p>
+            </div>
+        </div>
+
     </div>
 </div>
+
+<script>
+    function toggleAuth(mode) {
+        const loginSec = document.getElementById('login-section');
+        const regSec = document.getElementById('register-section');
+        
+        if (mode === 'register') {
+            loginSec.style.display = 'none';
+            regSec.style.display = 'block';
+        } else {
+            loginSec.style.display = 'block';
+            regSec.style.display = 'none';
+        }
+    }
+</script>
 {% endblock %}

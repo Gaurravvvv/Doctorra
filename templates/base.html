@@ -4,156 +4,267 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doctorra</title>
+    <!-- Import Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #1565C0;
+            --primary-gradient: linear-gradient(135deg, #1565C0 0%, #42A5F5 100%);
             --accent-color: #E3F2FD;
             --urgent-color: #d32f2f;
             --ready-color: #388e3c;
-            --filling-color: #757575;
-            --bg-color: #ffffff;
-            --text-color: #333;
+            --filling-color: #78909c;
+            --bg-color: #f0f4f8; /* Light gray-blue */
+            --card-bg: #ffffff;
+            --input-bg: #f1f5f9;
+            --text-color: #1e293b;
+            --text-light: #64748b;
+            --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius-lg: 16px;
+            --radius-pill: 50px;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             margin: 0;
             padding: 0;
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
         }
 
         header {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 1rem;
+            background: var(--card-bg);
+            color: var(--primary-color);
+            padding: 1.5rem 2rem;
             text-align: center;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            margin-bottom: 2rem;
         }
 
         header h1 {
             margin: 0;
-            font-size: 1.5rem;
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
         }
 
         .container {
             max-width: 800px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 20px;
+        }
+
+        .container-fluid {
+            padding: 0;
         }
 
         .card {
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #eee;
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-soft);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: none; /* Removed solid border */
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
+        
+        /* Optional: subtle lift on card hover if desired, mostly for lists
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        } */
 
         h2 {
-            color: var(--primary-color);
+            color: var(--text-color);
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+        }
+
+        h3 {
+            color: var(--text-color);
+            font-weight: 600;
         }
 
         label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-color);
+            font-size: 0.95rem;
         }
 
         input[type="text"],
         input[type="number"],
         input[type="password"],
+        input[type="email"],
         select,
         textarea {
             width: 100%;
-            padding: 10px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 14px 18px;
+            margin-bottom: 20px;
+            border: none;
+            background-color: var(--input-bg);
+            border-radius: 12px; /* Modern rounded inputs */
             box-sizing: border-box;
+            font-family: inherit;
+            font-size: 1rem;
+            color: var(--text-color);
+            transition: box-shadow 0.2s ease, background-color 0.2s ease;
         }
 
-        button.btn-primary {
-            background-color: var(--primary-color);
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            background-color: #fff;
+            box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.2); /* Blue focus ring */
+        }
+
+        button.btn-primary, .btn-primary {
+            background: var(--primary-gradient);
             color: white;
             border: none;
-            padding: 12px 20px;
-            border-radius: 4px;
+            padding: 14px 28px;
+            border-radius: var(--radius-pill); /* Pill shaped */
             cursor: pointer;
             width: 100%;
             font-size: 1rem;
+            font-weight: 600;
+            text-align: center;
+            display: inline-block;
+            box-sizing: border-box;
+            box-shadow: 0 4px 6px -1px rgba(21, 101, 192, 0.4);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
         }
 
-        button.btn-primary:hover {
-            background-color: #0d47a1;
+        button.btn-primary:hover, .btn-primary:hover {
+            transform: translateY(-2px); /* Hover lift */
+            box-shadow: 0 10px 15px -3px rgba(21, 101, 192, 0.5);
+        }
+        
+        button.btn-primary:active, .btn-primary:active {
+            transform: translateY(0);
         }
 
         .flash-messages {
             color: white;
-            background: #d32f2f;
-            padding: 10px;
+            background: #ef4444; /* Modern red */
+            padding: 1rem;
             text-align: center;
-            border-radius: 4px;
-            margin-bottom: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            box-shadow: var(--shadow-soft);
         }
         
         /* Dashboard specific */
         .dashboard-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            padding: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            padding: 24px;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
         .column {
-            background: #f9f9f9;
-            padding: 15px;
-            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.5); /* Semi-transparent */
+            padding: 0; /* Remove padding from column wrapper */
+            border-radius: var(--radius-lg);
         }
 
         .column h3 {
-            text-align: center;
-            border-bottom: 2px solid #ccc;
-            padding-bottom: 10px;
+            text-align: left;
+            padding: 15px 5px;
+            margin: 0 0 15px 0;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-light);
+            border-bottom: none;
         }
 
         .kanban-card {
             background: white;
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 6px;
-            border-left: 5px solid transparent;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 16px;
+            border-radius: 16px; /* Matching global radius */
+            border: none;
+            border-left: 6px solid transparent;
+            box-shadow: var(--shadow-soft);
+            transition: transform 0.2s ease;
         }
         
+        .kanban-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
         .kanban-card p {
-            margin: 5px 0;
+            margin: 8px 0;
+            color: var(--text-color);
+        }
+        
+        .kanban-card strong {
+            font-weight: 600;
         }
 
         .status-urgent .kanban-card {
             border-left-color: var(--urgent-color);
-            border: 1px solid var(--urgent-color);
         }
         
         .status-ready .kanban-card {
             border-left-color: var(--ready-color);
-            border: 1px solid var(--ready-color);
         }
 
         .status-filling .kanban-card {
             border-left-color: var(--filling-color);
-            opacity: 0.7;
         }
 
-        .column-urgent h3 { color: var(--urgent-color); border-color: var(--urgent-color); }
-        .column-ready h3 { color: var(--ready-color); border-color: var(--ready-color); }
-        .column-filling h3 { color: var(--filling-color); border-color: var(--filling-color); }
+        /* Status Colors for Column Headers if needed, but keeping clean for now */
+        .column-urgent h3 { color: var(--urgent-color); }
+        .column-ready h3 { color: var(--ready-color); }
+        .column-filling h3 { color: var(--filling-color); }
 
         .btn-small {
-            padding: 5px 10px;
-            font-size: 0.8rem;
+            padding: 8px 16px;
+            font-size: 0.85rem;
             width: auto;
+            border-radius: 30px;
+            box-shadow: none;
+        }
+        
+        /* Custom badges */
+        .badge {
+            font-size: 0.85em;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+        
+        /* Form group spacing */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Radio button modern styling container */
+        .options-group div {
+            padding: 10px 15px;
+            border-radius: 10px;
+            transition: background 0.2s;
+        }
+        .options-group div:hover {
+            background: var(--input-bg);
+        }
+        input[type="radio"] {
+            margin-right: 10px;
+            accent-color: var(--primary-color);
+            transform: scale(1.2);
         }
 
     </style>
@@ -163,7 +274,7 @@
         <h1>Doctorra</h1>
     </header>
     
-    <div class="container-fluid"> <!-- Used fluid for dashboard, constrained for others -->
+    <div class="container-fluid">
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div class="container">
