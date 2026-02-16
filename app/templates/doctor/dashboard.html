@@ -4,14 +4,14 @@
 <meta http-equiv="refresh" content="30">
 
 <div class="container-fluid">
-    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 20px;">
+    <div class="dashboard-header">
         <div>
             <h2>Doctor's Dashboard</h2>
             <p style="margin-top: -15px; color: #666;">Welcome, {{ doctor.full_name }} ({{ doctor.specialization }})</p>
         </div>
-        <div>
-            <a href="{{ url_for('history') }}" class="btn-primary btn-small" style="text-decoration: none; width: auto; background-color: #1565C0; margin-right: 10px;">History</a>
-            <a href="{{ url_for('logout') }}" class="btn-primary btn-small" style="text-decoration: none; width: auto; background-color: #555;">Logout</a>
+        <div class="btn-group">
+            <a href="{{ url_for('doctor.history') }}" class="btn-primary btn-small" style="text-decoration: none; background-color: #1565C0;">History</a>
+            <a href="{{ url_for('auth.logout') }}" class="btn-primary btn-small" style="text-decoration: none; background-color: #555;">Logout</a>
         </div>
     </div>
 
@@ -59,7 +59,7 @@
                     </ul>
                 </details>
 
-                <form action="{{ url_for('mark_treated', visit_id=visit.id) }}" method="POST">
+                <form action="{{ url_for('doctor.mark_treated', visit_id=visit.id) }}" method="POST">
                     <button type="submit" class="btn-primary btn-small" style="background-color: #d32f2f;">Mark Treated</button>
                 </form>
             </div>
@@ -95,7 +95,7 @@
                     </ul>
                 </details>
 
-                <form action="{{ url_for('mark_treated', visit_id=visit.id) }}" method="POST">
+                <form action="{{ url_for('doctor.mark_treated', visit_id=visit.id) }}" method="POST">
                     <button type="submit" class="btn-primary btn-small" style="background-color: #388e3c;">Mark Treated</button>
                 </form>
             </div>
@@ -125,7 +125,7 @@
 
 <script>
 function copyLink() {
-    const link = "{{ url_for('book_appointment', unique_code=doctor.unique_code, _external=True) }}";
+    const link = "{{ url_for('patient.book_appointment', unique_code=doctor.unique_code, _external=True) }}";
     navigator.clipboard.writeText(link).then(function() {
         alert('Booking Link Copied!');
     }, function(err) {

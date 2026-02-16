@@ -7,7 +7,7 @@
         <!-- SIGN IN SECTION -->
         <div id="login-section">
             <h2 style="text-align: center;">Doctor Login</h2>
-            <form method="POST" action="{{ url_for('doctor_login') }}">
+            <form method="POST" action="{{ url_for('auth.login') }}">
                 <div class="form-group">
                     <label for="login_username">Username</label>
                     <input type="text" id="login_username" name="username" required>
@@ -23,7 +23,7 @@
 
             <div style="text-align: center; margin-top: 20px; border-top: 1px solid #eee; padding-top: 20px;">
                 <p style="color: #666; margin-bottom: 10px;">Or sign in with</p>
-                <a href="{{ url_for('google_login') }}" class="btn-primary" style="background-color: #db4437; border-color: #db4437; width: 100%; display: inline-block; text-decoration: none;">
+                <a href="{{ url_for('auth.google_login') }}" class="btn-primary" style="background-color: #db4437; border-color: #db4437; width: 100%; display: inline-block; text-decoration: none;">
                     Sign in with Google
                 </a>
             </div>
@@ -36,7 +36,7 @@
         <!-- SIGN UP SECTION (Hidden by default) -->
         <div id="register-section" style="display: none;">
             <h2 style="text-align: center;">Create Account</h2>
-            <form method="POST" action="{{ url_for('register') }}">
+            <form method="POST" action="{{ url_for('auth.register') }}">
                 <div class="form-group">
                     <label for="reg_username">Username</label>
                     <input type="text" id="reg_username" name="username" required>

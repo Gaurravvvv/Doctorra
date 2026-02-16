@@ -153,7 +153,7 @@
 
         .flash-messages {
             color: white;
-            background: #ef4444; /* Modern red */
+            background: #43a047; /* Modern red */
             padding: 1rem;
             text-align: center;
             border-radius: 12px;
@@ -165,7 +165,7 @@
         /* Dashboard specific */
         .dashboard-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 24px;
             padding: 24px;
             max-width: 1400px;
@@ -265,6 +265,90 @@
             margin-right: 10px;
             accent-color: var(--primary-color);
             transform: scale(1.2);
+        }
+
+        /* Responsive Utilities */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .dashboard-header {
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 0 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .dashboard-header {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 0;
+                gap: 1rem;
+            }
+
+            .dashboard-header > div {
+                width: 100%;
+                text-align: center;
+            }
+
+            .dashboard-header h2 {
+                margin-bottom: 0.5rem;
+                font-size: 1.5rem;
+            }
+
+            .btn-group {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .btn-small {
+                width: 100% !important;
+                margin-right: 0 !important;
+                margin-bottom: 0.5rem;
+                display: block;
+            }
+            
+            /* Adjust grid for very small screens */
+            .dashboard-container {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
+            
+            /* Adjust inputs */
+            input[type="text"],
+            input[type="number"],
+            input[type="password"],
+            input[type="email"],
+            select,
+            textarea {
+                padding: 12px 14px;
+            }
         }
 
     </style>
